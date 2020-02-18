@@ -24,6 +24,7 @@ from my_quiz_game import start_quiz_game
 #
 
 
+
 # 1
 def my_create():
     print('--- Создание папки ---------')
@@ -130,13 +131,13 @@ def menu_os_info():
 
 
 # --- 8 ---------------------------------------------------
-def author_info():
+def get_author_info():
     return 'Морев С.А.'
 
 
 def menu_print_author():
     print('--- Информация об авторе ---')
-    print(f'\t{author_info()}')
+    print(f'\t{get_author_info()}')
 
 
 # --- 9 ---------------------------------------------------
