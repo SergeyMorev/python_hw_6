@@ -1,5 +1,5 @@
 import os
-import sys
+import platform
 
 from my_current_account import start_account
 from my_quiz_game import start_quiz_game
@@ -49,87 +49,135 @@ def my_copy():
     pass
 
 
-# 4
-def my_print_list():
+# --- 4 ---------------------------------------------------
+def get_files_and_dirs(path):
+    all_list = list()
+    try:
+        all_list = os.listdir(path)
+    except:
+        pass
+
+    return all_list
+
+
+def menu_print_files_and_dirs():
     print('\n--- Список файлов и папок ------')
-    print(f'\n{os.getcwd()}')
-    file_list = os.listdir()
-    for f in file_list:
-        print(f'\t{f}')
-    pass
+    curr_path = os.getcwd()
+    print(f'\n{curr_path}')
+    for f in get_files_and_dirs(curr_path):
+        print(f'\t./{f}')
 
 
-# 5
-def my_print_folders():
+# --- 5 ---------------------------------------------------
+def get_dirs(path):
+    folders = []
+    try:
+        for i in os.listdir(path):
+            if os.path.isdir(os.path.join(path, i)):
+                folders.append(i)
+    except:
+        pass
+
+    return folders
+
+
+def menu_print_dirs():
     print('\n--- Список папок -----------')
-    my_path = os.getcwd()
-    print(my_path)
-    for i in os.listdir('.'):
-        if os.path.isdir(os.path.join(my_path, i)):
-            print(f'\t./{i}')
+    curr_path = os.getcwd()
+    print(curr_path)
+    for f in get_dirs(curr_path):
+        print(f'\t./{f}')
 
 
-# 6
-def my_print_files():
+# --- 6 ---------------------------------------------------
+def get_file_list(path):
+    files = []
+    for i in os.listdir(path):
+        if os.path.isfile(os.path.join(path, i)):
+            files.append(i)
+
+    return files
+
+
+def menu_print_files():
     print('--- Список файлов ----------')
-    my_path = os.getcwd()
-    print(my_path)
-    for i in os.listdir('.'):
-        if os.path.isfile(os.path.join(my_path, i)):
-            print(f'\t./{i}')
+    curr_path = os.getcwd()
+    print(curr_path)
 
-    # for current_dir, dirs, files in os.walk("."):
-    #     print(current_dir, dirs, files)
+    for file in get_file_list(curr_path):
+        print(f'\t./{file}')
 
 
-# 7
-def my_os_info():
+# --- 7 ---------------------------------------------------
+def get_os_info():
+    """
+    Возвращает информацию об операционной системе в виде словаря.
+    :return:
+    """
+    info = dict()
+    info['platform-name']    = platform.system()
+    info['platform-release'] = platform.release()
+    info['platform-version'] = platform.version()
+    info['architecture']     = platform.machine()
+    return info
+
+
+def menu_os_info():
     print('--- Информация об OS -------')
-    info = os.uname()
-    print(f'\tOS: {info.sysname} {info.release}')
+    info = get_os_info()
+    for name, param in info.items():
+        print(f'\t {name} = {param}')
 
 
-# 8
-def my_print_author():
+# --- 8 ---------------------------------------------------
+def author_info():
+    return 'Морев С.А.'
+
+
+def menu_print_author():
     print('--- Информация об авторе ---')
-    print('\tМорев С.А.')
-    pass
+    print(f'\t{author_info()}')
 
 
-# 9
-def my_victory_game():
+# --- 9 ---------------------------------------------------
+def menu_victory_game():
     print('--- Игра "Викторина" -------')
     start_quiz_game()
 
 
-# 10
-def my_bill():
+# --- 10 --------------------------------------------------
+def menu_bill():
     print('--- Личный счет ------------')
     start_account()
 
 
-# 11
-def my_change_dir():
-    print('--- Перейти в папку --------')
+# --- 11 --------------------------------------------------
+def set_current_dir(dest_path):
+    res = ''
     try:
-        my_path = os.getcwd()
-        print(my_path)
-        folder_name = input('\tВведите имя папки:')
-        if os.path.isdir(folder_name):
-            os.chdir(folder_name)
-        elif os.path.isdir(my_path + folder_name):
-            os.chdir(my_path + folder_name)
+        curr_path = os.getcwd()
+        if os.path.isdir(dest_path):
+            os.chdir(dest_path)
+            res = os.getcwd()
+        elif os.path.isdir(curr_path + dest_path):
+            os.chdir(curr_path + dest_path)
+            res = os.getcwd()
         else:
-            print('Папка не найдена')
-
-        print(os.getcwd())
-
+            res = 'Папка не найдена'
     except Exception as error:
-        print(error)
-    pass
+        res = error
+
+    return res
 
 
-# 12  Exit !
+def menu_change_dir():
+    print('--- Перейти в папку --------')
+    print(os.getcwd())
+    folder_name = input('\tВведите имя папки:')
+    print(set_current_dir(folder_name))
+
+
+# --- 12  Exit ! ------------------------------------------
 def my_exit():
     print('--- Выход ---')
 
@@ -170,21 +218,21 @@ def main_menu():
         elif choice == 3:
             my_copy()
         elif choice == 4:
-            my_print_list()
+            menu_print_files_and_dirs()
         elif choice == 5:
-            my_print_folders()
+            menu_print_dirs()
         elif choice == 6:
-            my_print_files()
+            menu_print_files()
         elif choice == 7:
-            my_os_info()
+            menu_os_info()
         elif choice == 8:
-            my_print_author()
+            menu_print_author()
         elif choice == 9:
-            my_victory_game()
+            menu_victory_game()
         elif choice == 10:
-            my_bill()
+            menu_bill()
         elif choice == 11:
-            my_change_dir()
+            menu_change_dir()
         elif choice == 12:
             my_exit()
             break
