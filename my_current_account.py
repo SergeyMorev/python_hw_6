@@ -41,7 +41,23 @@ def input_float(message):
             print('Это не число')
 
 
-def get_curr_money():
+def save_balance():
+    pass
+
+
+def load_balance():
+    pass
+
+
+def save_shopping():
+    pass
+
+
+def load_shopping():
+    pass
+
+
+def get_curr_balance():
     return MONEY
 
 
