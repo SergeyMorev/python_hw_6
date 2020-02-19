@@ -1,5 +1,6 @@
 import os
 import file_manager as fm
+import my_current_account as bill
 
 
 def clear_folder(path):
@@ -8,6 +9,7 @@ def clear_folder(path):
             os.remove(os.path.join(root, name))
         for name in dirs:
             os.rmdir(os.path.join(root, name))
+
 
 # --- 6 ---
 def test_fm_file_list():
@@ -52,4 +54,20 @@ def test_fm_os_info():
 def test_fm_author():
     assert fm.get_author_info() == 'Морев С.А.'
 
+
+# =========================== my_account ============================
+def test_bill_add_money():
+    money = 22.22
+    old_balance = bill.get_curr_money()
+    bill.add_money(money)
+    new_balance = bill.get_curr_money()
+    assert new_balance - old_balance == money
+
+
+def test_bill_withdraw_money():
+    money = -1
+    old_balance = bill.get_curr_money()
+    bill.add_money(money)
+    new_balance = bill.get_curr_money()
+    assert new_balance == old_balance
 

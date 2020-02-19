@@ -29,7 +29,7 @@
 """
 
 MONEY = 10.0
-history = {}
+HISTORY = {}
 
 
 def input_float(message):
@@ -41,17 +41,55 @@ def input_float(message):
             print('Это не число')
 
 
-def add_money():
-    global MONEY, history
+def get_curr_money():
+    return MONEY
+
+
+def add_money(money):
+    """
+    :param money: сумма, которая будет добавлена к текущему счету
+    :return: сообщение об успешности выполнения операции
+    """
+    global MONEY
+    result = ''
+    if money < 0:
+        result = 'Счет можно только пополнить, снять деньги нельзя.'
+    else:
+        MONEY += money
+        result = f'Текущий баланс {get_curr_money()} руб'
+    return result
+
+
+def menu_add_money():
+    global MONEY
     print('\t', '-' * 20)
     print('\tПополнение счета')
-    print(f"\tНа вашем счете {MONEY} руб")
-
+    print(f"\tНа вашем счете {get_curr_money()} руб")
     delta = input_float('\tВведите сумму, на которую вы хотите пополнить счет: ')
-    if delta <= 0:
-        print('\tСчет можно только пополнить, снять деньги нельзя.')
+    print(add_money(delta))
+
+
+def menu_add_shopping():
+    global MONEY, HISTORY
+    print('\t', '-' * 20)
+    print('\tНовая покупка')
+    k = input('\tВведите название покупки: ')
+    v = input_float('\tВведите стоимость покупки: ')
+    if v <= MONEY:
+        MONEY -= v
+        HISTORY[k] = v
     else:
-        MONEY += delta
+        print('На счете не достаточно денег.')
+
+
+def print_shopping_list():
+    global HISTORY
+    print('\tИстория покупок')
+    if HISTORY:
+        for k in HISTORY:
+            print(f'\t{k} \t: {HISTORY[k]:.2f}')
+    else:
+        print('\tНет покупок')
 
 
 def show_menu():
@@ -64,36 +102,13 @@ def show_menu():
     return item
 
 
-def add_shopping():
-    global MONEY, history
-    print('\t', '-' * 20)
-    print('\tНовая покупка')
-    k = input('\tВведите название покупки: ')
-    v = input_float('\tВведите стоимость покупки: ')
-    if v <= MONEY:
-        MONEY -= v
-        history[k] = v
-    else:
-        print('На счете не достаточно денег.')
-
-
-def print_shopping_list():
-    global history
-    print('\tИстория покупок')
-    if history:
-        for k in history:
-            print(f'\t{k} \t: {history[k]:.2f}')
-    else:
-        print('\tНет покупок')
-
-
 def start_account():
     while True:
         choice = show_menu()
         if choice == '1':
-            add_money()
+            menu_add_money()
         elif choice == '2':
-            add_shopping()
+            menu_add_shopping()
         elif choice == '3':
             print_shopping_list()
         elif choice == '4':
