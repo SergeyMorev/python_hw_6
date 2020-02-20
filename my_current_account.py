@@ -1,3 +1,7 @@
+import pickle
+import json
+
+
 """
 МОДУЛЬ 3
 Программа "Личный счет"
@@ -41,20 +45,58 @@ def input_float(message):
             print('Это не число')
 
 
-def save_balance():
+# --- bin ---------------------------------------
+def save_balance_bin(file_name, balance):
     pass
 
 
-def load_balance():
+def load_balance_bin(file_name, balance):
     pass
 
 
-def save_shopping():
+def save_shopping_bin(file_name, shopping_list):
     pass
 
 
-def load_shopping():
+def load_shopping_bin(file_name, shopping_list):
     pass
+# -----------------------------------------------
+
+
+# --- json --------------------------------------
+def save_balance_json():
+    pass
+
+
+def load_balance_json():
+    pass
+
+
+def save_shopping_json():
+    pass
+
+
+def load_shopping_json():
+    pass
+# -----------------------------------------------
+
+
+# --- yml ---------------------------------------
+def save_balance_yml():
+    pass
+
+
+def load_balance_yml():
+    pass
+
+
+def save_shopping_yml():
+    pass
+
+
+def load_shopping_yml():
+    pass
+# -----------------------------------------------
 
 
 def get_curr_balance():
@@ -72,7 +114,7 @@ def add_money(money):
         result = 'Счет можно только пополнить, снять деньги нельзя.'
     else:
         MONEY += money
-        result = f'Текущий баланс {get_curr_money()} руб'
+        result = f'Текущий баланс {get_curr_balance()} руб'
     return result
 
 
@@ -80,7 +122,7 @@ def menu_add_money():
     global MONEY
     print('\t', '-' * 20)
     print('\tПополнение счета')
-    print(f"\tНа вашем счете {get_curr_money()} руб")
+    print(f"\tНа вашем счете {get_curr_balance()} руб")
     delta = input_float('\tВведите сумму, на которую вы хотите пополнить счет: ')
     print(add_money(delta))
 
