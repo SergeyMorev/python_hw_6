@@ -33,7 +33,7 @@ import yaml
 Для реализации основного меню можно использовать пример ниже или написать свой
 """
 
-MONEY = {'RUR': 10.0}
+MONEY = {'RUR': 10.0}   # Можно расширить на другие валюты.
 HISTORY = {}
 
 file_formats = ['bin', 'json', 'yaml']
@@ -63,6 +63,9 @@ def save(file_name, data, file_format):
                 json.dump(data, f)
             elif file_format == 'yaml':
                 yaml.dump(data, f)
+        return True
+    else:
+        return False
 
 
 def load(file_name, file_format):
@@ -82,7 +85,7 @@ def load(file_name, file_format):
         return data
 
 
-# --- bin ---------------------------------------
+# -----------------------------------------------
 def save_balance(balance, file_format='json'):
     save(balance_file[file_format], balance, file_format)
 
@@ -97,32 +100,61 @@ def save_shopping(shopping_list, file_format='json'):
 
 def load_shopping(file_format='json'):
     return load(shopping_file[file_format], file_format)
+
+
+def store_balance():
+    # Сохраняем balance во всех форматах
+    for ff in file_formats:
+        save_balance(MONEY, ff)
+
+
+def store_shopping():
+    # Сохраняем shopping_list во всех форматах
+    for ff in file_formats:
+        save_shopping(HISTORY, ff)
 # -----------------------------------------------
 
 
-def get_curr_balance():
-    return MONEY['RUR']
+def get_curr_balance(currency='RUR'):
+    global MONEY
+    return MONEY[currency]
 
 
-def add_money(money):
+def change_curr_balance(delta, currency='RUR'):
+    global MONEY
+    err_msg = None
+    if currency in MONEY:
+        MONEY[currency] += delta
+    else:
+        err_msg = 'Нет такой валюты'
+
+
+def add_money(money, currency='RUR'):
     """
     :param money: сумма, которая будет добавлена к текущему счету
-    :return: сообщение об успешности выполнения операции
+    :param currency: в какой валюте
+    :return: сообщение об ошибке
     """
-    global MONEY
-    result = ''
+    err_msg = None
     if money < 0:
-        result = 'Счет можно только пополнить, снять деньги нельзя.'
+        err_msg = 'Счет можно только пополнить, снять деньги нельзя.'
     else:
-        MONEY['RUR'] += money
+        change_curr_balance(money, currency)
+        store_balance()
 
-        # Сохраняем во всех форматах
-        for ff in file_formats:
-            save_balance(MONEY, ff)
+    return err_msg
 
-        result = f'Текущий баланс {get_curr_balance()} руб'
 
-    return result
+def spend_money(amount, currency='RUR'):
+    """
+    :param amount: количество денег, которое хотим потратить
+    :param currency: в какой валюте
+    :return: сообщение об ошибке (пустая строка если все ок).
+    """
+    if amount <= get_curr_balance(currency):
+        return change_curr_balance(-amount, currency)
+    else:
+        return 'На счете не достаточно денег.'
 
 
 def menu_add_money():
@@ -130,20 +162,34 @@ def menu_add_money():
     print('\tПополнение счета')
     print(f"\tНа вашем счете {get_curr_balance()} руб")
     delta = input_float('\tВведите сумму, на которую вы хотите пополнить счет: ')
-    print(add_money(delta))
+    err_msg = add_money(delta)
+    if err_msg is None:
+        print(f'Текущий баланс {get_curr_balance()} руб')
+    else:
+        print(err_msg)
+
+
+def add_shopping(name, cost):
+    global HISTORY
+
+    err_msg = spend_money(cost)
+    if err_msg is None:
+        HISTORY[name] = cost
+        # Сохраняем во всех форматах
+        store_shopping()
+        store_balance()
+
+    return err_msg
 
 
 def menu_add_shopping():
-    global MONEY, HISTORY
     print('\t', '-' * 20)
     print('\tНовая покупка')
-    k = input('\tВведите название покупки: ')
-    v = input_float('\tВведите стоимость покупки: ')
-    if v <= MONEY['RUR']:
-        MONEY['RUR'] -= v
-        HISTORY[k] = v
-    else:
-        print('На счете не достаточно денег.')
+    name = input('\tВведите название покупки: ')
+    cost = input_float('\tВведите стоимость покупки: ')
+    err_msg = add_shopping(name=name, cost=cost)
+    if err_msg:
+        print(err_msg)
 
 
 def print_shopping_list():
@@ -157,7 +203,7 @@ def print_shopping_list():
 
 
 def show_menu():
-    print(f'\n{"-" * 20} текущий счет: {get_curr_balance():.2f}')
+    print(f'\n{"=" * 20} Текущий счет: {get_curr_balance():.2f}')
     print('1. Пополнение счета')
     print('2. Новая покупка')
     print('3. История покупок')
@@ -167,6 +213,18 @@ def show_menu():
 
 
 def start_account():
+    global MONEY, HISTORY
+
+    # Load from json files.
+    new_balance = load_balance()
+    new_shopping_list = load_shopping()
+
+    if new_balance:
+        MONEY = new_balance
+
+    if new_shopping_list:
+        HISTORY = new_shopping_list
+
     while True:
         choice = show_menu()
         if choice == '1':
@@ -179,7 +237,6 @@ def start_account():
             break   # exit
         else:
             print('Неверный пункт меню')
-
 
 if __name__ == '__main__':
     start_account()
