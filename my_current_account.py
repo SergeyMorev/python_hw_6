@@ -53,6 +53,13 @@ def input_float(message):
 
 
 def save(file_name, data, file_format):
+    """
+    Сохраняет данные в один из трех возможных форматов: 'bin', 'json', 'yaml'.
+    :param file_name: путь к файлу в относительном или абсолютном виде.
+    :param data: любые данные для записи в файл.
+    :param file_format: название формата из списка форматов file_formats
+    :return: False если формат сохранения не поддерживатеся, True если известный формат
+    """
     file_mode = "wb" if file_format == 'bin' else "wt"
 
     if file_format in file_formats:
@@ -237,6 +244,7 @@ def start_account():
             break   # exit
         else:
             print('Неверный пункт меню')
+
 
 if __name__ == '__main__':
     start_account()

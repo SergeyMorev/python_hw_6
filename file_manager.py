@@ -25,6 +25,7 @@ from my_quiz_game import start_quiz_game
 
 
 
+
 # 1
 def my_create():
     print('--- Создание папки ---------')
@@ -70,6 +71,24 @@ def menu_print_files_and_dirs():
 
 
 # --- 5 ---------------------------------------------------
+def menu_save_current_dir():
+    print('\n--- Сохранение списка файлов и папок -----------')
+
+    dirs = get_dirs(os.getcwd())
+    files = get_file_list(os.getcwd())
+
+    files_str = 'files: '
+    dirs_str = 'dirs: '
+
+    files_str += ' '.join(files)
+    dirs_str += ' '.join(dirs)
+
+    file_name = 'listdir.txt'
+
+    pass
+
+
+# --- 6 ---------------------------------------------------
 def get_dirs(path):
     folders = []
     try:
@@ -90,7 +109,7 @@ def menu_print_dirs():
         print(f'\t./{f}')
 
 
-# --- 6 ---------------------------------------------------
+# --- 7 ---------------------------------------------------
 def get_file_list(path):
     files = []
     for i in os.listdir(path):
@@ -109,7 +128,7 @@ def menu_print_files():
         print(f'\t./{file}')
 
 
-# --- 7 ---------------------------------------------------
+# --- 8 ---------------------------------------------------
 def get_os_info():
     """
     Возвращает информацию об операционной системе в виде словаря.
@@ -130,7 +149,7 @@ def menu_os_info():
         print(f'\t {name} = {param}')
 
 
-# --- 8 ---------------------------------------------------
+# --- 9 ---------------------------------------------------
 def get_author_info():
     return 'Морев С.А.'
 
@@ -140,19 +159,19 @@ def menu_print_author():
     print(f'\t{get_author_info()}')
 
 
-# --- 9 ---------------------------------------------------
+# --- 10 ---------------------------------------------------
 def menu_victory_game():
     print('--- Игра "Викторина" -------')
     start_quiz_game()
 
 
-# --- 10 --------------------------------------------------
+# --- 11 --------------------------------------------------
 def menu_bill():
     print('--- Личный счет ------------')
     start_account()
 
 
-# --- 11 --------------------------------------------------
+# --- 12 --------------------------------------------------
 def set_current_dir(dest_path):
     res = ''
     try:
@@ -178,7 +197,7 @@ def menu_change_dir():
     print(set_current_dir(folder_name))
 
 
-# --- 12  Exit ! ------------------------------------------
+# --- 13  Exit ! ------------------------------------------
 def my_exit():
     print('--- Выход ---')
 
@@ -190,14 +209,15 @@ def show_menu():
     print(' 2- Удалить (файл/папку)')
     print(' 3- Копировать (файл/папку)')
     print(' 4- Просмотр содержимого рабочей директории')
-    print(' 5- Посмотреть только папки')
-    print(' 6- Посмотреть только файлы')
-    print(' 7- Просмотр информации об операционной системе')
-    print(' 8- Создатель программы')
-    print(' 9- Играть в викторину')
-    print('10- Мой банковский счет')
-    print('11- Смена рабочей директории')
-    print('12- Выход')
+    print(' 5- Сохранить содержимого рабочей директории')
+    print(' 6- Посмотреть только папки')
+    print(' 7- Посмотреть только файлы')
+    print(' 8- Просмотр информации об операционной системе')
+    print(' 9- Создатель программы')
+    print('10- Играть в викторину')
+    print('11- Мой банковский счет')
+    print('12- Смена рабочей директории')
+    print('13- Выход')
     item = -1
     try:
         item = int(input('Выберите пункт меню: '))
@@ -221,20 +241,22 @@ def main_menu():
         elif choice == 4:
             menu_print_files_and_dirs()
         elif choice == 5:
-            menu_print_dirs()
+            menu_save_current_dir()
         elif choice == 6:
-            menu_print_files()
+            menu_print_dirs()
         elif choice == 7:
-            menu_os_info()
+            menu_print_files()
         elif choice == 8:
-            menu_print_author()
+            menu_os_info()
         elif choice == 9:
-            menu_victory_game()
+            menu_print_author()
         elif choice == 10:
-            menu_bill()
+            menu_victory_game()
         elif choice == 11:
-            menu_change_dir()
+            menu_bill()
         elif choice == 12:
+            menu_change_dir()
+        elif choice == 13:
             my_exit()
             break
 
